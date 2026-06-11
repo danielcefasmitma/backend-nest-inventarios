@@ -16,3 +16,11 @@ pnpm add @nestjs/swagger
 ```
 pnpm add @nestjs/config
 ```
+- Instalar typeorm y pg
+```
+pnpm add @nestjs/typeorm typeorm mysql2
+```
+- Instalar dotenv
+```
+    pnpm add dotenv
+```
