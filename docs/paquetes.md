@@ -24,3 +24,7 @@ pnpm add @nestjs/typeorm typeorm mysql2
 ```
     pnpm add dotenv
 ```
+- Instalar class    
+```
+pnpm add class-validator
+```

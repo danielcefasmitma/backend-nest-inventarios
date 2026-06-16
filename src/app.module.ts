@@ -3,12 +3,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './modules/admin/users/users.module';
 
 
 @Module({
   // Habilitamos variables de entorno globalmente.
-  imports: [ConfigModule.forRoot(), 
-    TypeOrmModule.forRoot({
+  imports: [
+    ConfigModule.forRoot(), // Variables de entorno
+    TypeOrmModule.forRoot({ // Conexion a la base de datos
       type: 'postgres',
       host: process.env.DB_HOST,
       port: Number(process.env.DB_PORT) || 5432,
@@ -20,7 +22,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         __dirname + '/../**/*.entity{.ts,.js}'
       ],
       synchronize: false,
-    })
+    }),
+    UsersModule // modulo de usuario
   ],
   controllers: [AppController],
   providers: [AppService],
