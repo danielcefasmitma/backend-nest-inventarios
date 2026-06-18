@@ -24,7 +24,11 @@ pnpm add @nestjs/typeorm typeorm mysql2
 ```
     pnpm add dotenv
 ```
-- Instalar class    
+- Instalar class validator
 ```
-pnpm add class-validator
+pnpm add class-validator class-transformer
+```
+- Instalar bcrypt para cifrar
+```
+ pnpm add bcrypt
 ```

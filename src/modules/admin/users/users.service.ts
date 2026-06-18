@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException, Post } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, Post } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UsersService {
@@ -12,9 +13,20 @@ export class UsersService {
     @InjectRepository(User)
     private userRepository: Repository<User> ) {}
 
-  create(createUserDto: CreateUserDto) {
-    const nuevoUser = this.userRepository.create(createUserDto)
-    return this.userRepository.save(nuevoUser);
+  async create(createUserDto: CreateUserDto) {
+    const {name, email } = createUserDto;
+    // verificar existencia del correo
+    const existeEmail = await this.userRepository.findOne({where: {email: email}});
+    if(existeEmail){
+      throw new BadRequestException(`El correo ${email} ya esta en uso.`);
+    }
+
+    // encriptar con bcrypt
+    const hashPassword = await bcrypt.hash(createUserDto.password, 12);
+    const nuevoUsuario = await this.userRepository.create({name: name, email: email, password: hashPassword})
+    const usuarioRegistrado = await this.userRepository.save(nuevoUsuario);
+    const {password, ...resto } = usuarioRegistrado;
+    return resto;
   }
 
   findAll() {
@@ -23,6 +35,14 @@ export class UsersService {
 
   async findOne(id: string) {
     const usuario = await this.userRepository.findOneBy({id: id})
+    if(!usuario){
+      throw new NotFoundException("El usuario no se encuentra en la BD");
+    }
+    return usuario;
+  }
+
+  async findOneByEmail(email: string) {
+    const usuario = await this.userRepository.findOneBy({email: email})
     if(!usuario){
       throw new NotFoundException("El usuario no se encuentra en la BD");
     }
