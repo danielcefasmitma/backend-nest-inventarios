@@ -1,13 +1,49 @@
-### Obtener
+### Variables
+@api = http://127.0.0.1:5000
 
-GET http://127.0.0.1:5000/users
+---
+### Obtener todos los usuarios
+GET {{api}}/users
 
-### Guardar
-POST http://127.0.0.1:5000/users
+---
+### Obtener un usuario por ID
+# Cambia el "`d1" por el ID real del usuario que quieras buscar
+GET {{api}}/users/1
+
+---
+### Guardar (Crear) un nuevo usuario
+POST {{api}}/users
 Content-Type: application/json
 
 {
-  "name": "Oscar",
-  "email": "oscar@gmail.com",
-  "password": "oscar123"
+  "name": "Marta",
+  "email": "marta@gmail.com",
+  "password": "marta123"
 }
+
+---
+### Actualizar un usuario existente (Sustitución completa)
+# Cambia el "1" por el ID del usuario a actualizar
+PUT {{api}}/users/1
+Content-Type: application/json
+
+{
+  "name": "Marta Actualizada",
+  "email": "marta_nueva@gmail.com",
+  "password": "nuevapassword123"
+}
+
+---
+### Actualizar parcialmente un usuario
+# Ideal si tu API soporta PATCH para actualizar solo un campo (ej. la contraseña)
+PATCH {{api}}/users/1
+Content-Type: application/json
+
+{
+  "password": "passwordSuperSegura456"
+}
+
+---
+### Eliminar un usuario
+# Cambia el "1" por el ID del usuario a eliminar
+DELETE {{api}}/users/1

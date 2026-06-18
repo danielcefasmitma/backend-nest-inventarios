@@ -32,3 +32,8 @@ pnpm add class-validator class-transformer
 ```
  pnpm add bcrypt
 ```
+
+-Para JWT
+```
+    pnpm add @nestjs/jwt
+```
