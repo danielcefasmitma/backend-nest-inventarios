@@ -1,49 +1,42 @@
 ### Variables
 @api = http://127.0.0.1:5000
 
----
+###
 ### Obtener todos los usuarios
 GET {{api}}/users
-
----
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im9zY2FyQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDEyJEVFeWtZRkpDTG42azJ0elBRYmQwVXV2MjFEamFHbGc3ZGUuNi9Gci5QeGt4OWdrNlg5dURhIiwiaWF0IjoxNzgxODkxMTU1LCJleHAiOjE3ODE4OTE3NTV9.iV2Uy5yWMEWPnF-tmSnmQWytjFqD0-MCEA_15sn0vGo
 ### Obtener un usuario por ID
-# Cambia el "`d1" por el ID real del usuario que quieras buscar
-GET {{api}}/users/1
+GET {{api}}/users/8baa18c6-1875-4886-98f1-d4895f672012
 
----
+###
 ### Guardar (Crear) un nuevo usuario
 POST {{api}}/users
 Content-Type: application/json
 
 {
-  "name": "Marta",
-  "email": "marta@gmail.com",
-  "password": "marta123"
+  "name": "Maria",
+  "email": "maria@gmail.com",
+  "password": "maria123"
 }
 
----
 ### Actualizar un usuario existente (Sustitución completa)
-# Cambia el "1" por el ID del usuario a actualizar
-PUT {{api}}/users/1
+PATCH  {{api}}/users/cc574f45-948a-4076-804d-04f564a03484
 Content-Type: application/json
 
 {
-  "name": "Marta Actualizada",
-  "email": "marta_nueva@gmail.com",
-  "password": "nuevapassword123"
+  "name": "Maria Actualizada",
+  "email": "maria_nueva@gmail.com",
+  "password": "maria_nueva123"
 }
 
----
 ### Actualizar parcialmente un usuario
-# Ideal si tu API soporta PATCH para actualizar solo un campo (ej. la contraseña)
-PATCH {{api}}/users/1
+PATCH {{api}}/users/cc574f45-948a-4076-804d-04f564a03484
 Content-Type: application/json
 
 {
-  "password": "passwordSuperSegura456"
+  "email": "maria_nuevo123@gmail.com"
 }
 
----
 ### Eliminar un usuario
-# Cambia el "1" por el ID del usuario a eliminar
-DELETE {{api}}/users/1
+DELETE {{api}}/users/cc574f45-948a-4076-804d-04f564a03484
+Content-Type: application/json

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Tester - Auth & Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal min-h-screen flex flex-col items-center justify-center p-4 md:p-8">
+
+    <div id="loginView" class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg border-t-4 border-indigo-500 transition-all duration-300">
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">Bienvenido</h1>
+            <p class="text-gray-500 text-sm">Inicia sesión para acceder a la API</p>
+        </div>
+
+        <form id="loginForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="loginEmail" class="mt-1 w-full p-2 border rounded focus:ring-indigo-500 focus:border-indigo-500" required value="oscar@gmail.com">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Contraseña</label>
+                <input type="password" id="loginPassword" class="mt-1 w-full p-2 border rounded focus:ring-indigo-500 focus:border-indigo-500" required value="oscar123">
+            </div>
+            <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded hover:bg-indigo-700 transition">
+                Entrar
+            </button>
+            <p id="loginError" class="text-red-500 text-sm text-center hidden">Error al iniciar sesión. Revisa la consola.</p>
+        </form>
+    </div>
+
+    <div id="dashboardView" class="w-full max-w-7xl hidden transition-all duration-300">
+        
+        <div class="flex justify-between items-center mb-8 bg-white p-4 rounded-lg shadow">
+            <h1 class="text-2xl font-bold text-gray-800">Panel de Administración de Usuarios</h1>
+            <button onclick="logout()" class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition font-medium text-sm">
+                Cerrar Sesión
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <div class="bg-white p-6 rounded-lg shadow border-t-4 border-blue-500">
+                <h2 class="text-lg font-semibold mb-4 text-blue-700">Consultas</h2>
+                <button onclick="getUsers()" class="w-full bg-blue-50 text-blue-700 border border-blue-200 py-2 rounded hover:bg-blue-100 transition mb-4">Obtener Todos los Usuarios</button>
+                <hr class="my-4 border-gray-100">
+                <form id="getUserByIdForm" class="space-y-3">
+                    <input type="text" id="getUserId" placeholder="ID del Usuario" class="w-full p-2 border rounded text-sm" required>
+                    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition text-sm">Buscar por ID</button>
+                </form>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow border-t-4 border-green-500">
+                <h2 class="text-lg font-semibold mb-4 text-green-700">Crear Usuario</h2>
+                <form id="createUserForm" class="space-y-3">
+                    <input type="text" id="createName" placeholder="Nombre" class="w-full p-2 border rounded text-sm" required>
+                    <input type="email" id="createEmail" placeholder="Email" class="w-full p-2 border rounded text-sm" required>
+                    <input type="password" id="createPassword" placeholder="Contraseña" class="w-full p-2 border rounded text-sm" required>
+                    <button type="submit" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 transition text-sm">Guardar Usuario</button>
+                </form>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow border-t-4 border-yellow-500">
+                <h2 class="text-lg font-semibold mb-4 text-yellow-700">Actualizar Usuario</h2>
+                <form id="updateUserForm" class="space-y-3">
+                    <input type="text" id="updateId" placeholder="ID del Usuario (Requerido)" class="w-full p-2 border rounded border-yellow-300 text-sm" required>
+                    <input type="text" id="updateName" placeholder="Nuevo Nombre (Opcional)" class="w-full p-2 border rounded text-sm">
+                    <input type="email" id="updateEmail" placeholder="Nuevo Email (Opcional)" class="w-full p-2 border rounded text-sm">
+                    <input type="password" id="updatePassword" placeholder="Nueva Contraseña (Opcional)" class="w-full p-2 border rounded text-sm">
+                    <button type="submit" class="w-full bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600 transition text-sm">Actualizar Parcialmente</button>
+                </form>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow border-t-4 border-red-500">
+                <h2 class="text-lg font-semibold mb-4 text-red-700">Eliminar Usuario</h2>
+                <form id="deleteUserForm" class="space-y-3">
+                    <input type="text" id="deleteId" placeholder="ID del Usuario a eliminar" class="w-full p-2 border rounded border-red-300 text-sm" required>
+                    <button type="submit" class="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600 transition text-sm">Eliminar Definitivamente</button>
+                </form>
+            </div>
+
+            <div class="bg-gray-900 p-4 rounded-lg shadow md:col-span-2 lg:col-span-2 flex flex-col h-64 lg:h-auto">
+                <div class="flex justify-between items-center mb-2 border-b border-gray-700 pb-2">
+                    <h2 class="text-sm font-semibold text-gray-300 uppercase tracking-wider">Terminal de Respuestas</h2>
+                    <button onclick="clearConsole()" class="text-xs bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-600">Limpiar</button>
+                </div>
+                <pre id="responseConsole" class="text-green-400 text-xs font-mono overflow-auto flex-grow w-full whitespace-pre-wrap break-words">Esperando acciones...</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:5000';
+        const responseConsole = document.getElementById('responseConsole');
+        
+        // Elementos de la UI
+        const loginView = document.getElementById('loginView');
+        const dashboardView = document.getElementById('dashboardView');
+        const loginError = document.getElementById('loginError');
+
+        // Estado Global
+        let authToken = null;
+
+        // --- FUNCIONES DE INTERFAZ ---
+        function printResponse(endpoint, method, status, data) {
+            const time = new Date().toLocaleTimeString();
+            const log = `[${time}] ${method} ${endpoint}\nStatus: ${status}\nResponse:\n${JSON.stringify(data, null, 2)}\n\n`;
+            responseConsole.textContent = log + responseConsole.textContent;
+        }
+
+        function clearConsole() {
+            responseConsole.textContent = 'Esperando acciones...';
+        }
+
+        function toggleViews(isLoggedIn) {
+            if (isLoggedIn) {
+                loginView.classList.add('hidden');
+                document.body.classList.remove('items-center', 'justify-center');
+                document.body.classList.add('items-start');
+                dashboardView.classList.remove('hidden');
+                clearConsole();
+            } else {
+                dashboardView.classList.add('hidden');
+                document.body.classList.add('items-center', 'justify-center');
+                document.body.classList.remove('items-start');
+                loginView.classList.remove('hidden');
+                loginError.classList.add('hidden');
+                authToken = null; // Destruimos el token al salir
+            }
+        }
+
+        function logout() {
+            toggleViews(false);
+        }
+
+        // --- FUNCIÓN BASE FETCH ---
+        async function fetchAPI(endpoint, method, body = null, isLogin = false) {
+            try {
+                if (!isLogin) responseConsole.textContent = `Petición a ${endpoint}...\n\n` + responseConsole.textContent;
+                
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+
+                // Si tenemos un token guardado, lo inyectamos en las cabeceras (Estándar Bearer Token)
+                if (authToken) {
+                    headers['Authorization'] = `Bearer ${authToken}`;
+                }
+
+                const options = {
+                    method: method,
+                    headers: headers
+                };
+
+                if (body) {
+                    options.body = JSON.stringify(body);
+                }
+
+                const response = await fetch(`${API_URL}${endpoint}`, options);
+                
+                let data = null;
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    data = await response.json();
+                } else {
+                    data = await response.text();
+                }
+
+                if (!isLogin) printResponse(endpoint, method, response.status, data);
+
+                return { status: response.status, data: data };
+
+            } catch (error) {
+                if (!isLogin) {
+                    printResponse(endpoint, method, 'ERROR', { message: error.message });
+                }
+                return { status: 500, data: null };
+            }
+        }
+
+        // --- MANEJADORES DE EVENTOS (RUTAS) ---
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.textContent = 'Verificando...';
+            btn.disabled = true;
+            loginError.classList.add('hidden');
+
+            const body = {
+                email: document.getElementById('loginEmail').value,
+                password: document.getElementById('loginPassword').value
+            };
+            
+            const response = await fetchAPI('/auth/v1/auth/login', 'POST', body, true);
+            
+            btn.textContent = 'Entrar';
+            btn.disabled = false;
+
+            // Si el login es exitoso (200 o 201)
+            if (response.status >= 200 && response.status < 300) {
+                // NestJS usualmente retorna { access_token: "..." }. Ajusta la variable si tu backend usa otro nombre.
+                if (response.data && response.data.access_token) {
+                    authToken = response.data.access_token;
+                }
+                toggleViews(true);
+            } else {
+                loginError.classList.remove('hidden');
+                console.error("Error de Login:", response.data);
+            }
+        });
+
+        // Obtener Todos
+        function getUsers() {
+            fetchAPI('/users', 'GET');
+        }
+
+        // Obtener por ID
+        document.getElementById('getUserByIdForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('getUserId').value;
+            fetchAPI(`/users/${id}`, 'GET');
+        });
+
+        // Crear
+        document.getElementById('createUserForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const body = {
+                name: document.getElementById('createName').value,
+                email: document.getElementById('createEmail').value,
+                password: document.getElementById('createPassword').value
+            };
+            fetchAPI('/users', 'POST', body);
+            e.target.reset();
+        });
+
+        // Actualizar (PATCH)
+        document.getElementById('updateUserForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('updateId').value;
+            const body = {};
+            
+            const name = document.getElementById('updateName').value;
+            const email = document.getElementById('updateEmail').value;
+            const password = document.getElementById('updatePassword').value;
+
+            if (name) body.name = name;
+            if (email) body.email = email;
+            if (password) body.password = password;
+
+            fetchAPI(`/users/${id}`, 'PATCH', body);
+        });
+
+        // Eliminar
+        document.getElementById('deleteUserForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('deleteId').value;
+            fetchAPI(`/users/${id}`, 'DELETE');
+            e.target.reset();
+        });
+    </script>
+</body>
+</html>

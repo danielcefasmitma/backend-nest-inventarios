@@ -12,6 +12,7 @@ async function bootstrap() {
     .setDescription('Crud nest-inventarios-cv')
     .setVersion('1.0')
     .addTag('inventarios')
+    .addBearerAuth() // Agrega soporte para autenticación Bearer (JWT) en Swagger
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, documentFactory);
@@ -24,6 +25,9 @@ async function bootstrap() {
   }))
   // end validacion
 
+  // Habilitamos cors
+  app.enableCors();
+  // end enable cors
   await app.listen(process.env.PORT ?? 3000);
 } 
 bootstrap();
