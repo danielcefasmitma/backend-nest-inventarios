@@ -5,21 +5,21 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Observable } from 'rxjs';
 import { jwtConstants } from './constants';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
-  async canActivate(
-    context: ExecutionContext,
-  ): Promise<boolean> {
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     // Authorization: Bearer qoiur93428ur3498ty34
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
+
     if (!token) {
       throw new UnauthorizedException();
     }
+
     try {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: jwtConstants.secret,
@@ -29,7 +29,6 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
 
-    console.log('Verificando TOKEN', type, token);
     return true;
   }
 }
