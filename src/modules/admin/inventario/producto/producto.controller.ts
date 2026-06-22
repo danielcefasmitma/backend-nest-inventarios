@@ -2,6 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } f
 import { ProductoService } from './producto.service';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
+import { FindProductoDto } from './dto/find-producto.dto';
+import { ApiQuery } from '@nestjs/swagger';
 
 @Controller('producto')
 export class ProductoController {
@@ -13,12 +15,20 @@ export class ProductoController {
   }
 
   @Get()
+  @ApiQuery({name: 'search', required: false, type: String})
+  @ApiQuery({name: 'almacen', required: false, type: Number})
   findAll(@Query('page') page: number = 1,
       @Query('limit') limit: number = 10,
       @Query('almacen') almacen?: number,
       @Query('search') search?: string,
       @Query('estado') estado: boolean = true) {
     return this.productoService.findAll(page, limit, search, almacen, estado);
+  }
+
+  // Listar con DTO
+  @Get('/lista')
+  findAllDto(@Query() query: FindProductoDto) {
+    return this.productoService.findAll(query.page, query.limit, query.search, query.almacen, query.estado);
   }
 
   @Get(':id')
