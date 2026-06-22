@@ -23,7 +23,7 @@ export class Producto {
   marca?: string;
 
   @Column({ type: 'decimal', precision: 12, scale: 2 })
-  precio_venta_actual?: string;
+  precio_venta_actual?: number;
 
   @Column({ length: '255', nullable: true })
   imagen?: string;

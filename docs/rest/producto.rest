@@ -1,0 +1,50 @@
+### Variables
+@api = http://127.0.0.1:5000
+
+###
+### Obtener todos los productos
+GET {{api}}/producto?page=1&limit=10&search=&almacen=&estado=true
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im9zY2FyQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDEyJEVFeWtZRkpDTG42azJ0elBRYmQwVXV2MjFEamFHbGc3ZGUuNi9Gci5QeGt4OWdrNlg5dURhIiwiaWF0IjoxNzgxODkxMTU1LCJleHAiOjE3ODE4OTE3NTV9.iV2Uy5yWMEWPnF-tmSnmQWytjFqD0-MCEA_15sn0vGo
+### Obtener un producto por ID
+GET {{api}}/producto/2
+Content-Type: application/json
+
+###
+### Guardar (Crear) un nuevo producto
+POST {{api}}/producto
+Content-Type: application/json
+
+{
+    "nombre": "Laptop Apple MacBook Pro M3",
+    "descripcion": "Computadora portátil orientada a profesionales creativos",
+    "marca": "Apple",
+    "precio_venta_actual": 1999.00,
+    //"imagen": "https://mi-bucket.s3.amazonaws.com/productos/macbook-pro.jpg",
+    "estado": true,
+    "categoriaId": 1
+  }
+
+### Actualizar un producto existente (Sustitución completa)
+PATCH  {{api}}/producto/2
+Content-Type: application/json
+
+{
+ // "nombre": "Laptop Dell XPS 15",
+  "descripcion": "Laptop con procesador Intel Core i5, 16GB RAM y 512GB SSD",
+  //"marca": "Dell",
+  //"precio_venta_actual": "1499.99",
+  //"imagen": null,
+  //"estado": true,
+}
+
+### Actualizar parcialmente un producto
+PATCH {{api}}/users/4
+Content-Type: application/json
+
+{
+  "email": "maria_nuevo123@gmail.com"
+}
+
+### Eliminar un producto
+DELETE {{api}}/producto/2
+Content-Type: application/json
